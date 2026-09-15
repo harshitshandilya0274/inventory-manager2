@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StockFlow — Inventory Management</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <aside id="sidebar" class="sidebar">
+    <div class="brand">StockFlow</div>
+    <nav>
+      <button class="nav-item active" data-view="dashboard">Dashboard</button>
+      <button class="nav-item" data-view="inventory">Inventory</button>
+      <button class="nav-item" data-view="upload">Upload Inventory</button>
+      <button class="nav-item" data-view="alerts">Low Stock Alerts <span id="navAlertCount" data-empty="true">0</span></button>
+    </nav>
+    <div class="sidebar-actions">
+      <button id="sidebarDemo">Load Demo Data</button>
+      <button id="sidebarExport">Export CSV</button>
+      <button id="sidebarClear">Clear All</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <button id="hamburger" class="hamburger">☰</button>
+      <h1 id="pageTitle">Dashboard</h1>
+      <div class="top-search">
+        <input id="globalSearch" type="search" placeholder="Search products, SKU, category...">
+      </div>
+      <button id="btnAddItem" class="primary">+ Add Product</button>
+    </header>
+
+    <section id="view-dashboard" class="view active">
+      <div class="stats">
+        <div class="stat"><span>Total Products</span><strong id="statTotalProducts">0</strong></div>
+        <div class="stat"><span>Total Units</span><strong id="statTotalUnits">0</strong></div>
+        <div class="stat"><span>Total Inventory Value</span><strong id="statTotalValue">$0.00</strong></div>
+        <div class="stat"><span>Low Stock</span><strong id="statLowStock">0</strong></div>
+      </div>
+      <div class="grid-two">
+        <section class="card"><h2>Inventory by Category</h2><div id="categoryChart"></div></section>
+        <section class="card"><h2>Low Stock Alerts</h2><div id="dashboardAlerts"></div></section>
+      </div>
+      <section class="card"><h2>Recently Updated</h2><div id="recentList"></div></section>
+    </section>
+
+    <section id="view-inventory" class="view">
+      <div class="toolbar">
+        <select id="filterCategory"><option value="">All Categories</option></select>
+        <select id="filterStock">
+          <option value="">All Stock</option>
+          <option value="in">In Stock</option>
+          <option value="low">Low</option>
+          <option value="out">Out</option>
+        </select>
+        <select id="sortBy">
+          <option value="name-asc">Name A–Z</option>
+          <option value="name-desc">Name Z–A</option>
+          <option value="qty-desc">Quantity high–low</option>
+          <option value="qty-asc">Quantity low–high</option>
+          <option value="price-desc">Price high–low</option>
+          <option value="price-asc">Price low–high</option>
+        </select>
+        <span id="resultCount">0 items</span>
+      </div>
+      <div id="inventoryEmpty" class="empty hidden">
+        <h2>No inventory yet</h2>
+        <p>Add a product or load demo data to get started.</p>
+        <button id="emptyAddBtn" class="primary">+ Add Product</button>
+      </div>
+      <div class="table-wrap">
+        <table id="inventoryTable">
+          <thead>
+            <tr>
+              <th data-sort="name">Product</th><th data-sort="sku">SKU</th><th data-sort="category">Category</th>
+              <th data-sort="qty">Qty</th><th data-sort="reorder">Reorder</th><th data-sort="price">Price</th>
+              <th data-sort="value">Value</th><th>Status</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="inventoryBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="view-upload" class="view">
+      <section class="card upload-card">
+        <h2>Upload Inventory</h2>
+        <p>Import inventory from a CSV file.</p>
+        <div id="dropzone" class="dropzone">
+          <div class="dropzone-emoji">📄</div>
+          <strong>Drag & drop your CSV here</strong>
+          <span>or</span>
+          <button id="browseBtn" type="button">Browse file</button>
+          <input id="fileInput" type="file" accept=".csv,text/csv" hidden>
+        </div>
+        <button id="downloadTemplate" type="button">Download CSV Template</button>
+        <div id="importSummary" class="import-summary hidden"></div>
+      </section>
+    </section>
+
+    <section id="view-alerts" class="view">
+      <section class="card">
+        <h2>Low Stock Alerts</h2>
+        <div id="alertsFull"></div>
+      </section>
+    </section>
+  </main>
+
+  <div id="toastWrap" class="toast-wrap"></div>
+
+  <div id="itemModal" class="modal hidden">
+    <div class="modal-box">
+      <button id="modalClose" class="modal-close" type="button">×</button>
+      <h2 id="modalTitle">Add Product</h2>
+      <form id="itemForm">
+        <div class="form-grid">
+          <label>Product Name<input id="fName" required></label>
+          <label>SKU<input id="fSku"></label>
+          <label>Category<input id="fCategory" list="categoryOptions"><datalist id="categoryOptions"></datalist></label>
+          <label>Quantity<input id="fQty" type="number" min="0" value="0"></label>
+          <label>Price<input id="fPrice" type="number" min="0" step="0.01" value="0"></label>
+          <label>Reorder Level<input id="fReorder" type="number" min="0" value="0"></label>
+          <label class="full">Supplier<input id="fSupplier"></label>
+        </div>
+        <div class="modal-actions">
+          <button id="modalCancel" type="button">Cancel</button>
+          <button id="modalSave" class="primary" type="submit">Add Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
